@@ -6,14 +6,16 @@ while (have_posts()) :
 
     <div class="page-banner">
         <div class="page-banner__bg-image" style="background-image: url(<?php echo get_theme_file_uri("images/ocean.jpg") ?>)"></div>
-        <!-- <div class="page-banner__bg-image" style="background-image: url(images/ocean.jpg)"></div> -->
         <div class="page-banner__content container container--narrow">
+
             <h1 class="page-banner__title"><?php the_title(); ?></h1>
             <div class="page-banner__intro">
                 <p><?php the_excerpt(); ?></p>
             </div>
+
         </div>
     </div>
+
     <?php
     $theParent = wp_get_post_parent_id(get_the_ID());
     ?>
@@ -24,22 +26,25 @@ while (have_posts()) :
                 if ($theParent) {
                 ?>
                     <a class="metabox__blog-home-link" href="<?php echo get_permalink($theParent); ?>"><i class="fa fa-home" aria-hidden="true"></i> Back to <?php echo get_the_title($theParent) ?></a>
-                     <span class="metabox__main"><?php the_title(); ?></span>
+                    <span class="metabox__main"><?php the_title(); ?></span>
                 <?php } ?>
-            </p>
-        </div>
 
+            </p>
+
+        </div>
+        <!-- Add the 'Back to Events' button -->
+        <div class="back-to-events-button" style="margin-bottom: 20px;">
+            <a class="button button--primary" href="<?php echo get_post_type_archive_link('event'); ?>" style="text-decoration: none; padding: 10px 20px; background-color: #0073e6; color: white; border-radius: 5px; display: inline-block;">
+                <i class="fa fa-arrow-left" aria-hidden="true"></i> Back to Events
+            </a>
+        </div>
         <div class="page-links">
-            <h2 class="page-links__title"><a href="<?php echo get_permalink($theParent); ?>"><?php echo get_the_title($theParent) ?></a></h2>
             <ul class="min-list">
-                <!-- <li class="current_page_item"><a href="<?php ?>">Our History</a></li>
-          <li><a href="#">Our Goals</a></li> -->
                 <?php
                 wp_list_pages(array(
                     'title_li' => '',
-                    'child_of' => $theParent? $theParent:get_the_ID(),
+                    'child_of' => $theParent ? $theParent : get_the_ID(),
                 ));
-
                 ?>
             </ul>
         </div>

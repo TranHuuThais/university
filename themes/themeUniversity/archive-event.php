@@ -1,8 +1,25 @@
 <?php get_header(); ?>
 
+<?php
+// Default background image
+$banner_image = get_theme_file_uri('images/ocean.jpg');
+
+// Check if there are posts
+if (have_posts()) {
+    // Get the first post to set the banner image
+    the_post();
+    // Check if the post has a featured image
+    if (has_post_thumbnail()) {
+        $banner_image = get_the_post_thumbnail_url(get_the_ID(), 'full');
+    }
+    // Rewind post data
+    rewind_posts();
+}
+?>
+
 <!-- Page Banner -->
 <div class="page-banner">
-    <div class="page-banner__bg-image" style="background-image: url('<?php echo esc_url(get_theme_file_uri('images/ocean.jpg')); ?>');"></div>
+    <div class="page-banner__bg-image" style="background-image: url('<?php echo esc_url($banner_image); ?>');"></div>
     <div class="page-banner__content container container--narrow">
         <h1 class="page-banner__title"><?php single_term_title(); ?></h1>
         <p class="author-name" style="font-size: 14px; margin-top: 5px; color: white;">
@@ -32,11 +49,7 @@
             <article id="post-<?php the_ID(); ?>" <?php post_class('event-item'); ?>>
                 <header class="entry-header">
                     <?php the_title(sprintf('<h2 class="entry-title"><a href="%s">', esc_url(get_permalink())), '</a></h2>'); ?>
-                    <?php
-                    if (has_post_thumbnail()) {
-                        the_post_thumbnail('medium', array('class' => 'event-thumbnail'));
-                    }
-                    ?>
+                    <!-- Removed post thumbnail from here -->
                 </header><!-- .entry-header -->
 
                 <div class="entry-content">
@@ -61,6 +74,7 @@
         // Pagination or additional meta information
         the_posts_navigation();
         ?>
+        
 
     <?php else : ?>
         <?php get_template_part('template-parts/content/content-none'); ?>

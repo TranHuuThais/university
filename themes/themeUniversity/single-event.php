@@ -3,7 +3,11 @@
 <div class="single-event">
     <?php while (have_posts()) : the_post(); ?>
         <div class="page-banner">
-            <div class="page-banner__bg-image" style="background-image: url('<?php echo esc_url(get_theme_file_uri('images/ocean.jpg')); ?>');"></div>
+            <?php
+            // Get the featured image URL or fallback to a default image
+            $banner_image_url = has_post_thumbnail() ? get_the_post_thumbnail_url(get_the_ID(), 'full') : esc_url(get_theme_file_uri('images/ocean.jpg'));
+            ?>
+            <div class="page-banner__bg-image" style="background-image: url('<?php echo esc_url($banner_image_url); ?>');"></div>
             <div class="page-banner__content container container--narrow">
                 <h1 class="page-banner__title"><?php the_title(); ?></h1>
                 <p class="author-name" style="font-size: 14px; margin-top: 5px; color: white;">
@@ -11,14 +15,11 @@
                 </p>
             </div>
         </div>
+
         <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
             <header class="entry-header">
                 <?php the_title('<h1 class="entry-title">', '</h1>'); ?>
-                <?php
-                if (has_post_thumbnail()) {
-                    the_post_thumbnail('full', array('class' => 'event-thumbnail'));
-                }
-                ?>
+                <!-- Removed the_post_thumbnail() from here -->
             </header><!-- .entry-header -->
 
             <div class="entry-content">
@@ -29,6 +30,16 @@
                     <li><strong>Location:</strong> <?php echo esc_html(get_post_meta(get_the_ID(), 'event_location', true)); ?></li>
                     <li><strong>Time:</strong> <?php echo esc_html(get_post_meta(get_the_ID(), 'event_time', true)); ?></li>
                 </ul>
+
+                <?php
+                // Get and display the additional image if it exists
+                $additional_image_url = esc_url(get_post_meta(get_the_ID(), 'additional_image', true));
+                if ($additional_image_url) {
+                    echo '<div class="additional-image">';
+                    echo '<img src="' . $additional_image_url . '" alt="' . esc_attr(get_the_title()) . '" />';
+                    echo '</div>';
+                }
+                ?>
 
                 <?php wp_link_pages(); ?>
             </div><!-- .entry-content -->

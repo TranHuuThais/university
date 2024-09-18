@@ -12,8 +12,25 @@
 
 get_header(); ?>
 
+<?php
+// Default background image
+$banner_image = get_theme_file_uri('images/ocean.jpg');
+
+// Check if there are posts
+if (have_posts()) {
+    // Get the first post to set the banner image
+    the_post();
+    // Check if the post has a featured image
+    if (has_post_thumbnail()) {
+        $banner_image = get_the_post_thumbnail_url(get_the_ID(), 'full');
+    }
+    // Rewind post data
+    rewind_posts();
+}
+?>
+
 <div class="page-banner">
-    <div class="page-banner__bg-image" style="background-image: url(<?php echo esc_url(get_theme_file_uri('images/ocean.jpg')); ?>)"></div>
+    <div class="page-banner__bg-image" style="background-image: url(<?php echo esc_url($banner_image); ?>)"></div>
     <div class="page-banner__content container container--narrow">
         <h1 class="page-banner__title">
             <?php
@@ -50,13 +67,7 @@ get_header(); ?>
                 <?php else : ?>
                     <?php the_title(sprintf('<h2 class="entry-title default-max-width"><a href="%s">', esc_url(get_permalink())), '</a></h2>'); ?>
                 <?php endif; ?>
-
-                <?php if (has_post_thumbnail()) : ?>
-                    <div class="post-thumbnail">
-                        <?php the_post_thumbnail('full'); // 'full' có thể thay bằng kích thước ảnh bạn muốn 
-                        ?>
-                    </div>
-                <?php endif; ?>
+                <!-- Remove the post thumbnail from here -->
             </header><!-- .entry-header -->
 
             <div class="entry-content">
@@ -84,7 +95,6 @@ get_header(); ?>
                 </div><!-- .entry-meta -->
             </footer><!-- .entry-footer -->
         </article><!-- #post-<?php the_ID(); ?> -->
-
 
     <?php endwhile; ?>
 
